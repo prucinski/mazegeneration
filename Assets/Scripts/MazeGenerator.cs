@@ -8,8 +8,8 @@ public class MazeGenerator : MonoBehaviour
     // Start is called when our MazeGenerator object is called.
     void Start()
     {
-        int givenHeight = 10;
-        int givenWidth = 10;
+        int givenHeight = 7;
+        int givenWidth = 7;
         Maze myMaze = new Maze(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");
         generateMaze(myMaze);
@@ -30,23 +30,23 @@ public class MazeGenerator : MonoBehaviour
         //Step 1. C# passes objects as references, so this should work as intended.
         Cell currentCell = maze.getCell(startHeight, startWidth);
         recursivelyGenerate(maze, currentCell, startHeight, startWidth);
+        Debug.Log("Labirynth has been generated.");
 
     }
     private void recursivelyGenerate(Maze maze, Cell currentCell, int currentHeight, int currentWidth)
     {
         currentCell.markAsVisited();
-        int i = 0;
-        Debug.Log("Hello hun");
         while (currentCell.hasUnvisitedNeighbours())
         {
-            i++;
+
             //[inclusive, exclusive]
             int neighbourIndex = Random.Range(0, 4);
+            //Debug.Log("Exploring given cells unvisited neighbours: looking at cell: " + neighbourIndex);
             //lazy way of finding the index of an unvisited neighbour.
-            while (!currentCell.getNeighbour(neighbourIndex))
+            while (!currentCell.getNeighbourValue(neighbourIndex))
             {
-                Debug.Log(neighbourIndex);
                 neighbourIndex = Random.Range(0, 4);
+                //Debug.Log("Oops - this cell is unaccessible. Looking at cell: " + neighbourIndex);
             }
             //Now, the hard and tedious part. Removing walls between the cells.
             //Probably there's a more elegant solution to this than what I'm doing here,
@@ -57,47 +57,83 @@ public class MazeGenerator : MonoBehaviour
             //If we're moving up:
             if(neighbourIndex == 0)
             {
-                currentCell.removeWall(0);
-                Cell newCell = maze.getCell(currentHeight - 1, currentWidth);
-                Debug.Log("Hi");
                 chosenCell = maze.getCell(currentHeight - 1, currentWidth);
-                chosenCell.removeWall(1);
                 //creating these values so that currentHeight is preserved when recursive call comes back and other
                 //options are explored.
                 newHeight = currentHeight - 1;
                 newWidth = currentWidth;
+                //Checking whether the chosen cell has been visited at some other point in the recursion
+                if (chosenCell.isVisitable())
+                {
+                    currentCell.removeWall(0);
+                    chosenCell.removeWall(1);
+                }
+                //if it has, update it's status. Move on to the next neighbour.
+                else{
+                    currentCell.setNeigbourToFalse(0);
+                    continue;
+                }
+
             }
             //moving down
             else if (neighbourIndex == 1)
             {
-                currentCell.removeWall(1);
                 chosenCell = maze.getCell(currentHeight + 1, currentWidth);
-                chosenCell.removeWall(0);
                 newHeight = currentHeight + 1;
                 newWidth = currentWidth;
+                if (chosenCell.isVisitable())
+                {
+                    currentCell.removeWall(1);
+                    chosenCell.removeWall(0);
+                }
+                else
+                {
+                    currentCell.setNeigbourToFalse(1);
+                    continue;
+                }
+
             }
             //moving left
             else if(neighbourIndex == 2)
             {
-                currentCell.removeWall(2);
+
                 chosenCell = maze.getCell(currentHeight, currentWidth -1);
-                chosenCell.removeWall(3);
+
                 newHeight = currentHeight;
                 newWidth = currentWidth - 1;
+                if (chosenCell.isVisitable())
+                {
+                    currentCell.removeWall(2);
+                    chosenCell.removeWall(3);
+                }
+                else
+                {
+                    currentCell.setNeigbourToFalse(2);
+                    continue;
+                }
             }
             //moving right
             else
             {
-                currentCell.removeWall(3);
                 chosenCell = maze.getCell(currentHeight, currentWidth + 1);
-                chosenCell.removeWall(2);
                 newHeight = currentHeight;
                 newWidth = currentWidth + 1;
+                if (chosenCell.isVisitable())
+                {
+                    currentCell.removeWall(3);
+                    chosenCell.removeWall(2);
+                }
+                else
+                {
+                    currentCell.setNeigbourToFalse(3);
+                    continue;
+                }
             }
             Debug.Log("Moving into cell at coordinates: "+ newHeight + " " + newWidth);
             recursivelyGenerate(maze, chosenCell, newHeight, newWidth);
         }
+        Debug.Log("Cell at coordinates: " + currentHeight + " " + currentWidth + "has no unvisited neighbours left. Going back up.");
         //Labirynth generated! Wohoo!
-        Debug.Log("Labirynth has been generated.");
+        
     }
 }

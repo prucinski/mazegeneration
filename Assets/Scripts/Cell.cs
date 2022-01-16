@@ -41,7 +41,7 @@ public class Cell
         }
         return false;
     }
-    public bool getNeighbour(int neighbourIndex)
+    public bool getNeighbourValue(int neighbourIndex)
     {
         return neighbours[neighbourIndex];
     }
