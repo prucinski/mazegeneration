@@ -10,8 +10,8 @@ public class MazeGenerator : MonoBehaviour
     void Start()
     {
         textureCreator = gameObject.GetComponent<CreateTexture>();
-        int givenHeight = 15;
-        int givenWidth = 15;
+        int givenHeight = 150;
+        int givenWidth = 150;
         Maze myMaze = new Maze(givenHeight, givenWidth);
         textureCreator.createMesh(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");

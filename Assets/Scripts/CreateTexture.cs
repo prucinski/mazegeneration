@@ -26,7 +26,7 @@ public class CreateTexture : MonoBehaviour
     {
         // Testing out texture creation
         texture = new Texture2D(2, 2, TextureFormat.RGB24, true);
-        texture.filterMode = FilterMode.Point;
+
         sr = gameObject.AddComponent<SpriteRenderer>() as SpriteRenderer;
         // set the pixel values
         texture.SetPixel(0, 0, Color.black);
@@ -47,15 +47,60 @@ public class CreateTexture : MonoBehaviour
     {
         //rules described at the start of this piece of the file.
         int multiplier =  labirynthWidth<=25 ? 5 :(labirynthWidth<=50 ? 4:(labirynthWidth<=66 ? 3:(labirynthWidth<=100 ? 2:(labirynthWidth<=200? 1:0))));
-        texture = new Texture2D(multiplier * labirynthHeight, multiplier * labirynthWidth, TextureFormat.RGB24, true);
-        //maybe a workaround.
-        Color[] black = new Color[1];
-        black[0] = Color.black;
-        //setting the default mesh to be black walls and white background.
-        texture.SetPixels(black);
-        texture.Apply(false);
+        Debug.Log(multiplier);
+        //in pixels
+        int meshHeight = multiplier * labirynthHeight*5;
+        int meshWidth = multiplier * labirynthWidth*5;
+        texture = new Texture2D(meshHeight, meshWidth, TextureFormat.RGB24, true);
+        texture.filterMode = FilterMode.Point;
+        //fill with white
+        for (int i = 0; i <meshHeight; i++)
+        {
+            for(int j = 0; j < meshWidth; j++)
+            {
+                texture.SetPixel(i, j, Color.white);
+            }
+        }
+        //make walls
+        for(int i = 0; i<meshHeight; i++)
+        {
+            for(int j = 0; j<meshWidth; j++)
+            {
+                //Is it divisible by cell width? If yes, set wall on given height to white.
+                if (i % (5*multiplier) == 0)
+                {
+                    //depending on the multipliers, set walls to black.
+                    for(int k = 0; k<multiplier; k++)
+                    {
+                        texture.SetPixel(i+k, j, Color.black);
+                        texture.SetPixel(i + multiplier * 4 + k, j, Color.black);
+                    }  
+                }
+                //Set wall on given width to white if on border of a cell.
+                if (j % (5 * multiplier) == 0)
+                {
+                    //depending on the multipliers, set walls to black.
+                    for (int k = 0; k < multiplier; k++)
+                    {
+                        texture.SetPixel(i, j+k, Color.black);
+                        texture.SetPixel(i, j+multiplier * 4 + k, Color.black);
+                    }
+                }
+            }
 
-        
+        }
+
+        texture.Apply(false);
+        sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
+        sr.sprite = sprite;
+    }
+    //seems like there's no quick methods
+    private void setPixelsHelper()
+    {
+
+    }
+    public void removeWall(int cellHeight, int cellWidth)
+    {
 
     }
 }
