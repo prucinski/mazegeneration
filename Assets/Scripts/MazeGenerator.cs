@@ -11,8 +11,8 @@ public class MazeGenerator : MonoBehaviour
     void Start()
     {
         textureCreator = gameObject.GetComponent<CreateTexture>();
-        int givenHeight = 4;
-        int givenWidth = 4;
+        int givenHeight = 51;
+        int givenWidth = 51;
         Maze myMaze = new Maze(givenHeight, givenWidth);
         textureCreator.createMesh(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");
@@ -35,6 +35,7 @@ public class MazeGenerator : MonoBehaviour
         Cell currentCell = maze.getCell(startHeight, startWidth);
         recursivelyGenerate(maze, currentCell, startHeight, startWidth);
         Debug.Log("Labirynth has been generated.");
+        textureCreator.finishRender();
 
     }
 
@@ -42,6 +43,8 @@ public class MazeGenerator : MonoBehaviour
     private void recursivelyGenerate(Maze maze, Cell currentCell, int currentHeight, int currentWidth)
     {
         currentCell.markAsVisited();
+        //bad practice below, but the easiest implementation.
+        int m = textureCreator.geMultiplier();
         while (currentCell.hasUnvisitedNeighbours())
         {
 
@@ -73,6 +76,8 @@ public class MazeGenerator : MonoBehaviour
                 {
                     currentCell.removeWall(0);
                     chosenCell.removeWall(1);
+                    textureCreator.removeWall(m, currentHeight, currentWidth, 0, maze.getHeight());
+                    textureCreator.removeWall(m, newHeight, newWidth, 1, maze.getHeight());
                 }
                 //if it has, update it's status. Move on to the next neighbour.
                 else{
@@ -91,6 +96,8 @@ public class MazeGenerator : MonoBehaviour
                 {
                     currentCell.removeWall(1);
                     chosenCell.removeWall(0);
+                    textureCreator.removeWall(m, currentHeight, currentWidth, 1, maze.getHeight());
+                    textureCreator.removeWall(m, newHeight, newWidth, 0, maze.getHeight());
                 }
                 else
                 {
@@ -111,6 +118,8 @@ public class MazeGenerator : MonoBehaviour
                 {
                     currentCell.removeWall(2);
                     chosenCell.removeWall(3);
+                    textureCreator.removeWall(m, currentHeight, currentWidth, 2, maze.getHeight());
+                    textureCreator.removeWall(m, newHeight, newWidth, 3, maze.getHeight());
                 }
                 else
                 {
@@ -128,6 +137,8 @@ public class MazeGenerator : MonoBehaviour
                 {
                     currentCell.removeWall(3);
                     chosenCell.removeWall(2);
+                    textureCreator.removeWall(m, currentHeight, currentWidth, 3, maze.getHeight());
+                    textureCreator.removeWall(m, newHeight, newWidth, 2, maze.getHeight());
                 }
                 else
                 {
@@ -140,7 +151,7 @@ public class MazeGenerator : MonoBehaviour
         }
         //Debug.Log("Cell at coordinates: " + currentHeight + " " + currentWidth + "has no unvisited neighbours left. Going back up.");
         //Labirynth generated! Wohoo!
-        textureCreator.removeWall(textureCreator.geMultiplier(), 2, 2, 4, maze.getHeight());
+        
         
     }
 }

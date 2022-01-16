@@ -20,28 +20,11 @@ public class CreateTexture : MonoBehaviour
     //Awake is called when game is launched
     private void Awake()
     {
-   
+        sr = gameObject.AddComponent<SpriteRenderer>() as SpriteRenderer;
     }
     // Start is called before the first frame update
     void Start()
-    {
-        // Testing out texture creation
-        texture = new Texture2D(2, 2, TextureFormat.RGB24, true);
-
-        sr = gameObject.AddComponent<SpriteRenderer>() as SpriteRenderer;
-        // set the pixel values
-        texture.SetPixel(0, 0, Color.black);
-        texture.SetPixel(1, 0, Color.white);
-        texture.SetPixel(0, 1, Color.white);
-        texture.SetPixel(1, 1, Color.black);
-        
-        // Apply all SetPixel calls
-        texture.Apply();
-        //create a sprite.
-        sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
-        sr.sprite = sprite;
-        // connect texture to material of GameObject this script is attached to
-        
+    {  
     }
     //texture to create the initial laborithm initialization
     public void createMesh(int labirynthHeight, int labirynthWidth)
@@ -106,7 +89,7 @@ public class CreateTexture : MonoBehaviour
         //Therefore need to subtract the height
         cellHeight = mazeHeight - cellHeight -1;
         //Remove NORTH wall
-        if(direction == 1)
+        if(direction == 0)
         {
             //go through the pixels on the north border, at a given height
             for (int i = cellWidth * 5 * multiplier + multiplier; i < cellWidth * 5 * multiplier + multiplier * 4; i++)
@@ -125,7 +108,7 @@ public class CreateTexture : MonoBehaviour
         }
 
         //Remove SOUTH wall
-        else if (direction == 2)
+        else if (direction == 1)
         {
             //go through the pixels on the north border, at a given height
             for (int i = cellWidth *5* multiplier + multiplier; i<cellWidth*5*multiplier +multiplier*4; i++)
@@ -142,7 +125,7 @@ public class CreateTexture : MonoBehaviour
             sr.sprite = sprite;
         }
         //remove WEST
-        else if (direction == 3)
+        else if (direction == 2)
         {
             //go through the pixels on the north border, at a given height
             for (int i = cellHeight * 5 * multiplier + multiplier; i < cellHeight * 5 * multiplier + multiplier * 4; i++)
@@ -158,7 +141,7 @@ public class CreateTexture : MonoBehaviour
             sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
             sr.sprite = sprite;
         }
-        else if (direction == 4)
+        else if (direction == 3)
         {
             //go through the pixels on the north border, at a given height
             for (int i = cellHeight * 5 * multiplier + multiplier; i < cellHeight * 5 * multiplier + multiplier * 4; i++)
@@ -170,11 +153,15 @@ public class CreateTexture : MonoBehaviour
                     texture.SetPixel(cellWidth * 5 * multiplier +multiplier*4 + j, i, Color.white);
                 }
             }
-            texture.Apply(false);
-            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
-            sr.sprite = sprite;
+
         }
 
+    }
+    public void finishRender()
+    {
+        texture.Apply(false);
+        sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
+        sr.sprite = sprite;
     }
 
     public int geMultiplier()
