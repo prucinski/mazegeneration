@@ -16,6 +16,7 @@ public class CreateTexture : MonoBehaviour
     private Texture2D texture;
     private Sprite sprite;
     private SpriteRenderer sr;
+    private int multiplier;
     //Awake is called when game is launched
     private void Awake()
     {
@@ -46,19 +47,20 @@ public class CreateTexture : MonoBehaviour
     public void createMesh(int labirynthHeight, int labirynthWidth)
     {
         //rules described at the start of this piece of the file.
-        int multiplier =  labirynthWidth<=25 ? 5 :(labirynthWidth<=50 ? 4:(labirynthWidth<=66 ? 3:(labirynthWidth<=100 ? 2:(labirynthWidth<=200? 1:0))));
-        Debug.Log(multiplier);
+        multiplier =  labirynthWidth<=25 ? 5 :(labirynthWidth<=50 ? 4:(labirynthWidth<=66 ? 3:(labirynthWidth<=100 ? 2:(labirynthWidth<=200? 1:0))));
+        Debug.Log(geMultiplier());
         //in pixels
         int meshHeight = multiplier * labirynthHeight*5;
         int meshWidth = multiplier * labirynthWidth*5;
-        texture = new Texture2D(meshHeight, meshWidth, TextureFormat.RGB24, true);
+        //textures are confusing when it comes to indexing. Or perhaps it's my system that's confusing?
+        texture = new Texture2D(meshWidth, meshHeight, TextureFormat.RGB24, true);
         texture.filterMode = FilterMode.Point;
         //fill with white
         for (int i = 0; i <meshHeight; i++)
         {
             for(int j = 0; j < meshWidth; j++)
             {
-                texture.SetPixel(i, j, Color.white);
+                texture.SetPixel(j, i, Color.white);
             }
         }
         //make walls
@@ -67,29 +69,28 @@ public class CreateTexture : MonoBehaviour
             for(int j = 0; j<meshWidth; j++)
             {
                 //Is it divisible by cell width? If yes, set wall on given height to white.
-                if (i % (5*multiplier) == 0)
+                if (j % (5*multiplier) == 0)
                 {
                     //depending on the multipliers, set walls to black.
                     for(int k = 0; k<multiplier; k++)
                     {
-                        texture.SetPixel(i+k, j, Color.black);
-                        texture.SetPixel(i + multiplier * 4 + k, j, Color.black);
+                        texture.SetPixel(j+k, i, Color.black);
+                        texture.SetPixel(j + multiplier * 4 + k, i, Color.black);
                     }  
                 }
                 //Set wall on given width to white if on border of a cell.
-                if (j % (5 * multiplier) == 0)
+                if (i % (5 * multiplier) == 0)
                 {
                     //depending on the multipliers, set walls to black.
                     for (int k = 0; k < multiplier; k++)
                     {
-                        texture.SetPixel(i, j+k, Color.black);
-                        texture.SetPixel(i, j+multiplier * 4 + k, Color.black);
+                        texture.SetPixel(j, i+k, Color.black);
+                        texture.SetPixel(j, i+multiplier * 4 + k, Color.black);
                     }
                 }
             }
 
         }
-
         texture.Apply(false);
         sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
         sr.sprite = sprite;
@@ -99,8 +100,52 @@ public class CreateTexture : MonoBehaviour
     {
 
     }
-    public void removeWall(int cellHeight, int cellWidth)
+    public void removeWall(int multiplier, int cellHeight, int cellWidth, int direction, int mazeHeight)
     {
+        //textures start in bottom left corner. My array starts at top left corner.
+        //Therefore need to subtract the height
+        cellHeight = mazeHeight - cellHeight;
+        //Remove NORTH wall
+        if(direction == 1)
+        {
+            //go through the pixels on the north border, at a given height
+            for (int i = cellWidth * 5 * multiplier + multiplier; i < cellWidth * 5 * multiplier + multiplier * 4; i++)
+            {
+                //go through width on the height
+                for (int j = 0; j < multiplier; j++)
+                {
+                    //textures start in bottom left corner. My array starts at top left corner.
+                    //Therefore need to subtract the height 
+                    texture.SetPixel(i, cellHeight * 5 * multiplier + multiplier*4 + j, Color.white);
+                }
+            }
+            texture.Apply(false);
+            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
+            sr.sprite = sprite;
+        }
 
+        //Remove SOUTH wall
+        else if (direction == 2)
+        {
+            //go through the pixels on the north border, at a given height
+            for (int i = cellWidth *5* multiplier + multiplier; i<cellWidth*5*multiplier +multiplier*4; i++)
+            {
+                //go through width on the height
+                for (int j = 0; j < multiplier; j++)
+                {
+                    
+                    texture.SetPixel(i, cellHeight*5*multiplier + j, Color.white);
+                }
+            }
+            texture.Apply(false);
+            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
+            sr.sprite = sprite;
+        }
+        
+    }
+
+    public int geMultiplier()
+    {
+        return multiplier;
     }
 }

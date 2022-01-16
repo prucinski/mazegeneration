@@ -5,13 +5,14 @@ using System.Threading;
 
 public class MazeGenerator : MonoBehaviour
 {
+    private int multiplier;
     private CreateTexture textureCreator;
     // Start is called when our MazeGenerator object is called.
     void Start()
     {
         textureCreator = gameObject.GetComponent<CreateTexture>();
-        int givenHeight = 150;
-        int givenWidth = 150;
+        int givenHeight = 4;
+        int givenWidth = 4;
         Maze myMaze = new Maze(givenHeight, givenWidth);
         textureCreator.createMesh(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");
@@ -139,6 +140,7 @@ public class MazeGenerator : MonoBehaviour
         }
         //Debug.Log("Cell at coordinates: " + currentHeight + " " + currentWidth + "has no unvisited neighbours left. Going back up.");
         //Labirynth generated! Wohoo!
+        textureCreator.removeWall(textureCreator.geMultiplier(), 2, 2, 1, maze.getHeight());
         
     }
 }
