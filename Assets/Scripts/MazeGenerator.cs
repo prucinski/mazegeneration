@@ -8,8 +8,8 @@ public class MazeGenerator : MonoBehaviour
     // Start is called when our MazeGenerator object is called.
     void Start()
     {
-        int givenHeight = 7;
-        int givenWidth = 7;
+        int givenHeight = 150;
+        int givenWidth = 150;
         Maze myMaze = new Maze(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");
         generateMaze(myMaze);
@@ -33,6 +33,8 @@ public class MazeGenerator : MonoBehaviour
         Debug.Log("Labirynth has been generated.");
 
     }
+
+    //first method. uses recursive Generation - it starts overflowing at 150x150, which is rather small.
     private void recursivelyGenerate(Maze maze, Cell currentCell, int currentHeight, int currentWidth)
     {
         currentCell.markAsVisited();
@@ -129,10 +131,10 @@ public class MazeGenerator : MonoBehaviour
                     continue;
                 }
             }
-            Debug.Log("Moving into cell at coordinates: "+ newHeight + " " + newWidth);
+            //Debug.Log("Moving into cell at coordinates: "+ newHeight + " " + newWidth);
             recursivelyGenerate(maze, chosenCell, newHeight, newWidth);
         }
-        Debug.Log("Cell at coordinates: " + currentHeight + " " + currentWidth + "has no unvisited neighbours left. Going back up.");
+        //Debug.Log("Cell at coordinates: " + currentHeight + " " + currentWidth + "has no unvisited neighbours left. Going back up.");
         //Labirynth generated! Wohoo!
         
     }
