@@ -5,12 +5,15 @@ using System.Threading;
 
 public class MazeGenerator : MonoBehaviour
 {
+    private CreateTexture textureCreator;
     // Start is called when our MazeGenerator object is called.
     void Start()
     {
-        int givenHeight = 150;
-        int givenWidth = 150;
+        textureCreator = gameObject.GetComponent<CreateTexture>();
+        int givenHeight = 15;
+        int givenWidth = 15;
         Maze myMaze = new Maze(givenHeight, givenWidth);
+        textureCreator.createMesh(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");
         generateMaze(myMaze);
     }
