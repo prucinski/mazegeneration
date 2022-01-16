@@ -140,7 +140,7 @@ public class MazeGenerator : MonoBehaviour
         }
         //Debug.Log("Cell at coordinates: " + currentHeight + " " + currentWidth + "has no unvisited neighbours left. Going back up.");
         //Labirynth generated! Wohoo!
-        textureCreator.removeWall(textureCreator.geMultiplier(), 2, 2, 1, maze.getHeight());
+        textureCreator.removeWall(textureCreator.geMultiplier(), 2, 2, 4, maze.getHeight());
         
     }
 }

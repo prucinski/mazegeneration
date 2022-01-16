@@ -104,7 +104,7 @@ public class CreateTexture : MonoBehaviour
     {
         //textures start in bottom left corner. My array starts at top left corner.
         //Therefore need to subtract the height
-        cellHeight = mazeHeight - cellHeight;
+        cellHeight = mazeHeight - cellHeight -1;
         //Remove NORTH wall
         if(direction == 1)
         {
@@ -141,7 +141,40 @@ public class CreateTexture : MonoBehaviour
             sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
             sr.sprite = sprite;
         }
-        
+        //remove WEST
+        else if (direction == 3)
+        {
+            //go through the pixels on the north border, at a given height
+            for (int i = cellHeight * 5 * multiplier + multiplier; i < cellHeight * 5 * multiplier + multiplier * 4; i++)
+            {
+                //go through width on the height
+                for (int j = 0; j < multiplier; j++)
+                {
+
+                    texture.SetPixel(cellWidth * 5 * multiplier + j, i, Color.white);
+                }
+            }
+            texture.Apply(false);
+            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
+            sr.sprite = sprite;
+        }
+        else if (direction == 4)
+        {
+            //go through the pixels on the north border, at a given height
+            for (int i = cellHeight * 5 * multiplier + multiplier; i < cellHeight * 5 * multiplier + multiplier * 4; i++)
+            {
+                //go through width on the height
+                for (int j = 0; j < multiplier; j++)
+                {
+
+                    texture.SetPixel(cellWidth * 5 * multiplier +multiplier*4 + j, i, Color.white);
+                }
+            }
+            texture.Apply(false);
+            sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
+            sr.sprite = sprite;
+        }
+
     }
 
     public int geMultiplier()
