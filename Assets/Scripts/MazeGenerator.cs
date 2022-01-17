@@ -13,12 +13,12 @@ public class MazeGenerator : MonoBehaviour
     void Start()
     {
         textureCreator = gameObject.GetComponent<CreateTexture>();
-        int givenHeight = 100;
-        int givenWidth = 100;
+        int givenHeight = 25;
+        int givenWidth = 25;
         Maze myMaze = new Maze(givenHeight, givenWidth);
         textureCreator.createMesh(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");
-        generateMaze(myMaze);
+        //generateMaze(myMaze);
     }
 
     //for now, it can start anywhere inside of the maze. I might change it later.
@@ -31,14 +31,14 @@ public class MazeGenerator : MonoBehaviour
     public void generateMaze(Maze maze)
     {
         int startHeight = 0, startWidth = 0;
-        int choice = 2;
+        int choice = 1;
         createStartPosition(maze, ref startHeight, ref startWidth);
         Debug.Log("Start position set: " + startHeight + ", " + startWidth);
         //Step 1. C# passes objects as references, so this should work as intended.
         Cell currentCell = maze.getCell(startHeight, startWidth);
         if(choice == 1)
         {
-            recursivelyGenerate(maze, currentCell, startHeight, startWidth);
+            StartCoroutine(recursivelyGenerate(maze, currentCell, startHeight, startWidth));
             Debug.Log("Labirynth has been generated - recursive.");
         }
         else if(choice == 2)
@@ -52,7 +52,7 @@ public class MazeGenerator : MonoBehaviour
     }
 
     //first method. uses recursive Generation - it starts overflowing at 150x150, which is rather small.
-    private void recursivelyGenerate(Maze maze, Cell currentCell, int currentHeight, int currentWidth)
+    private IEnumerator recursivelyGenerate(Maze maze, Cell currentCell, int currentHeight, int currentWidth)
     {
         currentCell.markAsVisited();
         //bad practice below, but the easiest implementation.
@@ -88,8 +88,8 @@ public class MazeGenerator : MonoBehaviour
                 {
                     currentCell.removeWall(0);
                     chosenCell.removeWall(1);
-                    //textureCreator.removeWall(m, currentHeight, currentWidth, 0, maze.getHeight());
-                    //textureCreator.removeWall(m, newHeight, newWidth, 1, maze.getHeight());
+                    textureCreator.removeWall(m, currentHeight, currentWidth, 0, maze.getHeight());
+                    textureCreator.removeWall(m, newHeight, newWidth, 1, maze.getHeight());
                 }
                 //if it has, update it's status. Move on to the next neighbour.
                 else
@@ -109,8 +109,8 @@ public class MazeGenerator : MonoBehaviour
                 {
                     currentCell.removeWall(1);
                     chosenCell.removeWall(0);
-                    //textureCreator.removeWall(m, currentHeight, currentWidth, 1, maze.getHeight());
-                    //textureCreator.removeWall(m, newHeight, newWidth, 0, maze.getHeight());
+                    textureCreator.removeWall(m, currentHeight, currentWidth, 1, maze.getHeight());
+                    textureCreator.removeWall(m, newHeight, newWidth, 0, maze.getHeight());
                 }
                 else
                 {
@@ -131,8 +131,8 @@ public class MazeGenerator : MonoBehaviour
                 {
                     currentCell.removeWall(2);
                     chosenCell.removeWall(3);
-                    //textureCreator.removeWall(m, currentHeight, currentWidth, 2, maze.getHeight());
-                    //textureCreator.removeWall(m, newHeight, newWidth, 3, maze.getHeight());
+                    textureCreator.removeWall(m, currentHeight, currentWidth, 2, maze.getHeight());
+                    textureCreator.removeWall(m, newHeight, newWidth, 3, maze.getHeight());
                 }
                 else
                 {
@@ -150,8 +150,8 @@ public class MazeGenerator : MonoBehaviour
                 {
                     currentCell.removeWall(3);
                     chosenCell.removeWall(2);
-                    //textureCreator.removeWall(m, currentHeight, currentWidth, 3, maze.getHeight());
-                    //textureCreator.removeWall(m, newHeight, newWidth, 2, maze.getHeight());
+                    textureCreator.removeWall(m, currentHeight, currentWidth, 3, maze.getHeight());
+                    textureCreator.removeWall(m, newHeight, newWidth, 2, maze.getHeight());
                 }
                 else
                 {
@@ -160,7 +160,9 @@ public class MazeGenerator : MonoBehaviour
                 }
             }
             //Debug.Log("Moving into cell at coordinates: "+ newHeight + " " + newWidth);
-            recursivelyGenerate(maze, chosenCell, newHeight, newWidth);
+            //yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.01f);
+            yield return recursivelyGenerate(maze, chosenCell, newHeight, newWidth);
         }
     }
     //generating using a stack. Removes the recursive boundary and can update on the fly.
