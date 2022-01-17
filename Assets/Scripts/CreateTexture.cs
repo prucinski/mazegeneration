@@ -155,13 +155,14 @@ public class CreateTexture : MonoBehaviour
             }
 
         }
+        texture.Apply(false);
+        sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
+        sr.sprite = sprite;
 
     }
     public void finishRender()
     {
-        texture.Apply(false);
-        sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
-        sr.sprite = sprite;
+
     }
 
     public int geMultiplier()
