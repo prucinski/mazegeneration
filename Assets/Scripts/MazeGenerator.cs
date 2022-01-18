@@ -8,10 +8,6 @@ public class MazeGenerator : MonoBehaviour
 {
     private int multiplier;
     private CreateTexture textureCreator;
-    //only for handling button creation after it's done generating.
-    //Bad example of high coupling, but I'm not sure how to call it differently.
-    private GameObject eventHandler;
-
     // Start was called when our MazeGenerator object is called.
     //Now UI is present, so that is unnecessary.
     void Start()
@@ -161,12 +157,9 @@ public class MazeGenerator : MonoBehaviour
                 }
             }
             //Debug.Log("Moving into cell at coordinates: "+ newHeight + " " + newWidth);
-            //yield return new WaitForSeconds(0.01f);
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.001f);
             yield return recursivelyGenerate(maze, chosenCell, newHeight, newWidth);
         }
-        //bad bad practice. But only thing that comes to mind right now.
-        GameObject.Find("EventSystem").GetComponent<UIhandler>().activateButtonAgain();
     }
     //generating using a stack. Removes the recursive boundary and can update on the fly.
     private IEnumerator IterativelyGenerate(Maze maze, Cell currentCell, int currentHeight, int currentWidth)
@@ -298,10 +291,8 @@ public class MazeGenerator : MonoBehaviour
                 }
 
             }
-            yield return new WaitForSeconds(0.01f);
+            yield return new WaitForSeconds(0.001f);
         }
-        //bad bad practice. But only thing that comes to mind right now.
-        GameObject.Find("EventSystem").GetComponent<UIhandler>().activateButtonAgain();
     }
 
 }
