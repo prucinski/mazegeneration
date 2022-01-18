@@ -9,15 +9,10 @@ public class MazeGenerator : MonoBehaviour
     private int multiplier;
     private CreateTexture textureCreator;
 
-    // Start is called when our MazeGenerator object is called.
+    // Start was called when our MazeGenerator object is called.
+    //Now UI is present, so that is unnecessary.
     void Start()
     {
-        textureCreator = gameObject.GetComponent<CreateTexture>();
-        int givenHeight = 25;
-        int givenWidth = 25;
-        Maze myMaze = new Maze(givenHeight, givenWidth);
-        textureCreator.createMesh(givenHeight, givenWidth);
-        Debug.Log("Empty maze created.");
         //generateMaze(myMaze);
     }
 
@@ -28,10 +23,16 @@ public class MazeGenerator : MonoBehaviour
         firstIndex = Random.Range(0, maze.getHeight());
         secondIndex = Random.Range(0, maze.getWidth());
     }
-    public void generateMaze(Maze maze)
+    //keeping it as an int as I might add more generation methods later.
+    public void generateMaze(int choice)
     {
+        textureCreator = gameObject.GetComponent<CreateTexture>();
+        int givenHeight = 25;
+        int givenWidth = 25;
+        Maze maze = new Maze(givenHeight, givenWidth);
+        textureCreator.createMesh(givenHeight, givenWidth);
+        Debug.Log("Empty maze created.");
         int startHeight = 0, startWidth = 0;
-        int choice = 1;
         createStartPosition(maze, ref startHeight, ref startWidth);
         Debug.Log("Start position set: " + startHeight + ", " + startWidth);
         //Step 1. C# passes objects as references, so this should work as intended.
