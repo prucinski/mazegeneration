@@ -8,6 +8,9 @@ public class MazeGenerator : MonoBehaviour
 {
     private int multiplier;
     private CreateTexture textureCreator;
+    //only for handling button creation after it's done generating.
+    //Bad example of high coupling, but I'm not sure how to call it differently.
+    private GameObject eventHandler;
 
     // Start was called when our MazeGenerator object is called.
     //Now UI is present, so that is unnecessary.
@@ -24,11 +27,9 @@ public class MazeGenerator : MonoBehaviour
         secondIndex = Random.Range(0, maze.getWidth());
     }
     //keeping it as an int as I might add more generation methods later.
-    public void generateMaze(int choice)
+    public void generateMaze(int choice, int givenWidth = 10, int givenHeight = 10)
     {
         textureCreator = gameObject.GetComponent<CreateTexture>();
-        int givenHeight = 25;
-        int givenWidth = 25;
         Maze maze = new Maze(givenHeight, givenWidth);
         textureCreator.createMesh(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");
@@ -48,8 +49,7 @@ public class MazeGenerator : MonoBehaviour
             Debug.Log("Labirynth has been generated - iterative.");
         }
 
-       
-
+        
     }
 
     //first method. uses recursive Generation - it starts overflowing at 150x150, which is rather small.
@@ -165,6 +165,8 @@ public class MazeGenerator : MonoBehaviour
             yield return new WaitForSeconds(0.01f);
             yield return recursivelyGenerate(maze, chosenCell, newHeight, newWidth);
         }
+        //bad bad practice. But only thing that comes to mind right now.
+        GameObject.Find("EventSystem").GetComponent<UIhandler>().activateButtonAgain();
     }
     //generating using a stack. Removes the recursive boundary and can update on the fly.
     private IEnumerator IterativelyGenerate(Maze maze, Cell currentCell, int currentHeight, int currentWidth)
@@ -197,7 +199,7 @@ public class MazeGenerator : MonoBehaviour
                 {
                     neighbourIndex = Random.Range(0, 4);
                 }
-                Debug.Log("Went with " + neighbourIndex);
+                //Debug.Log("Went with " + neighbourIndex);
                 int newHeight;
                 int newWidth;
                 Cell chosenCell;
@@ -298,7 +300,8 @@ public class MazeGenerator : MonoBehaviour
             }
             yield return new WaitForSeconds(0.01f);
         }
-       
+        //bad bad practice. But only thing that comes to mind right now.
+        GameObject.Find("EventSystem").GetComponent<UIhandler>().activateButtonAgain();
     }
 
 }

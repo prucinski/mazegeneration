@@ -29,12 +29,13 @@ public class CreateTexture : MonoBehaviour
     //texture to create the initial laborithm initialization
     public void createMesh(int labirynthHeight, int labirynthWidth)
     {
-        //rules described at the start of this piece of the file.
-        multiplier =  labirynthWidth<=25 ? 5 :(labirynthWidth<=50 ? 4:(labirynthWidth<=66 ? 3:(labirynthWidth<=100 ? 2:(labirynthWidth<=200? 1:0))));
+        //rules described at the start of this piece of the file. For now no other pattern
+        multiplier =  labirynthWidth<=25 ? 5 :(labirynthWidth<=50 ? 4:(labirynthWidth<=66 ? 3:(labirynthWidth<=100 ? 2:(labirynthWidth<=200? 1:1))));
         Debug.Log(geMultiplier());
         //in pixels
         int meshHeight = multiplier * labirynthHeight*5;
         int meshWidth = multiplier * labirynthWidth*5;
+
         //textures are confusing when it comes to indexing. Or perhaps it's my system that's confusing?
         texture = new Texture2D(meshWidth, meshHeight, TextureFormat.RGB24, true);
         texture.filterMode = FilterMode.Point;
@@ -77,6 +78,8 @@ public class CreateTexture : MonoBehaviour
         texture.Apply(false);
         sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
         sr.sprite = sprite;
+        //center the maze on screen
+        sr.transform.position = new Vector3(-sr.bounds.size.x / 2, -sr.bounds.size.y / 2);
     }
     //seems like there's no quick methods
     private void setPixelsHelper()
