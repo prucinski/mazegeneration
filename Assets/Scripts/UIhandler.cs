@@ -16,6 +16,8 @@ public class UIhandler : MonoBehaviour
     public GameObject mazeCanvas;
     public Slider widthSlider;
     public Slider heightSlider;
+    public Text widthText;
+    public Text heightText;
     private int choice = 1;
     private int width = 10;
     private int height = 10;
@@ -63,10 +65,12 @@ public class UIhandler : MonoBehaviour
     public void slidWidth()
     {
         width = (int)widthSlider.value;
+        widthText.text = width.ToString();
     }
     public void slidHeight()
     {
         height = (int)heightSlider.value;
+        heightText.text = height.ToString();
     }
 
 }
