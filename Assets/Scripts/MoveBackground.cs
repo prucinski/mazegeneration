@@ -5,11 +5,11 @@ using UnityEngine;
 //I just wanted to put something together very quickly, so this is independent of screen sizes.
 public class MoveBackground : MonoBehaviour
 {
-    private float speedOfBackground = 0.005f;
+    private float speedOfBackground = 1f;
     // Update is called once per frame
     void Update()
     {
-        gameObject.transform.Translate(Vector3.left*speedOfBackground);
+        gameObject.transform.Translate(Vector3.left*speedOfBackground*Time.deltaTime);
         if(gameObject.transform.position.x < -35.5f)
         {
             gameObject.transform.position = new Vector3(71, 0, 0);

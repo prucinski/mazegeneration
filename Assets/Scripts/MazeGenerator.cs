@@ -7,6 +7,8 @@ using Unity.Jobs;
 public class MazeGenerator : MonoBehaviour
 {
     private int multiplier;
+    private bool hasVerticalBias;
+    private float animationSpeed;
     private CreateTexture textureCreator;
     // Start was called when our MazeGenerator object is called.
     //Now UI is present, so that is unnecessary.
@@ -23,12 +25,15 @@ public class MazeGenerator : MonoBehaviour
         secondIndex = Random.Range(0, maze.getWidth());
     }
     //keeping it as an int as I might add more generation methods later.
-    public void generateMaze(int choice, int givenWidth = 10, int givenHeight = 10)
+    public void generateMaze(int choice, int givenWidth = 10, int givenHeight = 10, int anim = 3, bool biased = false)
     {
         textureCreator = gameObject.GetComponent<CreateTexture>();
         Maze maze = new Maze(givenHeight, givenWidth);
         textureCreator.createMesh(givenHeight, givenWidth);
         Debug.Log("Empty maze created.");
+        //animation speed will be a global variable. Easiest for recursive calls, albeit not the best practice.
+        animationSpeed = anim == 3 ? 0.001f : (anim == 2 ? 0.01f : 0.1f);
+        hasVerticalBias = biased;
         int startHeight = 0, startWidth = 0;
         createStartPosition(maze, ref startHeight, ref startWidth);
         Debug.Log("Start position set: " + startHeight + ", " + startWidth);
@@ -37,12 +42,10 @@ public class MazeGenerator : MonoBehaviour
         if(choice == 1)
         {
             StartCoroutine(recursivelyGenerate(maze, currentCell, startHeight, startWidth));
-            Debug.Log("Labirynth has been generated - recursive.");
         }
         else if(choice == 2)
         {
             StartCoroutine(IterativelyGenerate(maze, currentCell, startHeight, startWidth));
-            Debug.Log("Labirynth has been generated - iterative.");
         }
 
         
@@ -52,14 +55,22 @@ public class MazeGenerator : MonoBehaviour
     private IEnumerator recursivelyGenerate(Maze maze, Cell currentCell, int currentHeight, int currentWidth)
     {
         currentCell.markAsVisited();
-        //bad practice below, but the easiest implementation.
+        //bad practice (increases coupling) below, but the easiest implementation.
         int m = textureCreator.geMultiplier();
         while (currentCell.hasUnvisitedNeighbours())
         {
-
-            //[inclusive, exclusive]
-            int neighbourIndex = Random.Range(0, 4);
-            //Debug.Log("Exploring given cells unvisited neighbours: looking at cell: " + neighbourIndex);
+            int neighbourIndex;
+            if (hasVerticalBias)
+            {
+                //75% chance it will follow the bias.
+                //[inclusive, exclusive]
+                int randChance = Random.Range(0, 4);
+                neighbourIndex = randChance != 0 ? Random.Range(0, 2) : Random.Range(0, 4);
+            }
+            else
+            {
+                neighbourIndex = Random.Range(0, 4);
+            }
             //lazy way of finding the index of an unvisited neighbour.
             while (!currentCell.getNeighbourValue(neighbourIndex))
             {
@@ -157,7 +168,7 @@ public class MazeGenerator : MonoBehaviour
                 }
             }
             //Debug.Log("Moving into cell at coordinates: "+ newHeight + " " + newWidth);
-            yield return new WaitForSeconds(0.001f);
+            yield return new WaitForSeconds(animationSpeed);
             yield return recursivelyGenerate(maze, chosenCell, newHeight, newWidth);
         }
     }
@@ -170,7 +181,15 @@ public class MazeGenerator : MonoBehaviour
         Stack<Cell> cellsToExpand = new Stack<Cell>();
         Stack<int> heights = new Stack<int>();
         Stack<int> widths = new Stack<int>();
-        //cellsToExpand.EnsureCapacity(32);
+        //I was planning to have it allocate a stack of a very large size,
+        //since Stack<T> is array based - so we don't want to be resizing it during
+        //runtime. However, despite documentation saying that EnsureCapacity() is 
+        //baseline for Generics, I am unable to call it. Could you please give me 
+        //some feedback on what I could be doing wrong?
+
+        //cellsToExpand.EnsureCapacity(maze.getWidth()*maze.getHeight());
+        //heights.EnsureCapacity(maze.getWidth()*maze.getHeight());
+        //widths.EnsureCapacity(maze.getWidth()*maze.getHeight())
         currentCell.markAsVisited();
         cellsToExpand.Push(currentCell);
         heights.Push(currentHeight);
@@ -188,7 +207,17 @@ public class MazeGenerator : MonoBehaviour
                 cellsToExpand.Push(currentCell);
                 heights.Push(currentHeight);
                 widths.Push(currentWidth);
-                int neighbourIndex = Random.Range(0, 4);
+                int neighbourIndex;
+                if (hasVerticalBias)
+                {
+                    //75% chance it will follow the bias.
+                    int randChance = Random.Range(0, 4);
+                    neighbourIndex = randChance != 0 ? Random.Range(0, 2) : Random.Range(0, 4);
+                }
+                else
+                {
+                    neighbourIndex = Random.Range(0, 4);
+                }
                 while (!currentCell.getNeighbourValue(neighbourIndex))
                 {
                     neighbourIndex = Random.Range(0, 4);
@@ -292,7 +321,7 @@ public class MazeGenerator : MonoBehaviour
                 }
 
             }
-            yield return new WaitForSeconds(0.001f);
+            yield return new WaitForSeconds(animationSpeed);
         }
     }
 
