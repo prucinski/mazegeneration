@@ -27,6 +27,8 @@ public class UIhandler : MonoBehaviour
     private int height = 10;
     private int anim = 3;
     private bool verticalBias = false;
+    private int resWidth = 1920;
+    private int resHeight = 1080;
     public void Start()
     {
         firstScreen.SetActive(true);
@@ -90,6 +92,20 @@ public class UIhandler : MonoBehaviour
             biasButton.GetComponentInChildren<Text>().text = "Vertical Bias Off";
         }
     }
+    //functions for setting resolution
+    //apparently buttons don't like accepting two values.
+    public void setWidth(int rWidth)
+    {
+        resWidth = rWidth;
+    }
+    public void setHeight(int rHeight)
+    {
+        resHeight = rHeight;
+    }
+    public void setResolution()
+    {
+        Screen.SetResolution(resWidth, resHeight, false);
+    }
     public void slidWidth()
     {
         width = (int)widthSlider.value;
@@ -105,7 +121,6 @@ public class UIhandler : MonoBehaviour
         anim = (int)animSlider.value;
         Debug.Log(anim);
         animSpeedText.text = anim == 3 ? "Fast" : (anim == 2 ? "Medium" : (anim == 1 ? "Slow" : "Error"));
-
     }
 
 }
