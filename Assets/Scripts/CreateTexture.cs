@@ -5,12 +5,13 @@ using UnityEngine;
 //Graphically, cells will be represented as 5x5 pixel blocks at minimum - multipliers of those
 //for bigger mazes.
 //I'll even it out for the smaller resolution - let's assume 1000 pixels.
-//So for mazes up to 25x25 - cells are 25x25 pixel blocks
-//So for mazes up to 50x50 - cells are 20x20 pixel blocks
+//So for mazes up to 20x20 - cells are 50x50 pixel blocks
+//So for mazes up to 40x40 - cells are 25x25 pixel blocks
+//for mazes up to 50x50 - cells are 20x20 pixel blocks
 //for mazes up to 66x66 - cells are 15x15 pixel blocks
 //For mazes up to 100x100 - cells are 10x10 pixel blocks
 //for mazes up to 200x200 - cells are 5x5 pixels.
-//mazes up to 250x250 have to be 4x4 pixels to fill that requirement, and therefore will use a different pattern.
+//mazes up to 250x250 will be slighly scaled down.
 //This is the basic 5x5 cell layout, on which the code is based:
 //W - wall, S - space.
 //W W W W W
@@ -40,7 +41,7 @@ public class CreateTexture : MonoBehaviour
     {
         int makeSelection = Mathf.Max(labirynthHeight, labirynthWidth);
         //rules described at the start of this piece of the file. For now no other pattern
-        multiplier = makeSelection <= 25 ? 5 : (makeSelection <= 50 ? 4 : (makeSelection <= 66 ? 3 : (makeSelection <= 100 ? 2 : 1)));
+        multiplier = makeSelection <= 20 ? 10 : (makeSelection <= 40 ? 5 : (makeSelection <= 50 ? 4 : (makeSelection <= 66 ? 3 :(makeSelection<= 100 ? 2: 1))));
         Debug.Log(geMultiplier());
         //in pixels
         int meshHeight = multiplier * labirynthHeight * 5;
@@ -87,8 +88,8 @@ public class CreateTexture : MonoBehaviour
         }
         //Setup for removeWall() function, at the same time:
         //Setup for SetPixels() function, that is supposedly better optimized than calling SetPixel() repeatedly
-        //it doesnt matter what size of it is, it just need to be a minimum of the wall we're removing.
-        colorWhite = new Color[100];
+        //it doesnt matter what size of it is, it just need to be a minimum of the wall we're removing - at best 10x30 pixel blocks.
+        colorWhite = new Color[300];
         for (int i = 0; i < colorWhite.Length; i++)
         {
             colorWhite[i] = Color.white;
@@ -97,10 +98,10 @@ public class CreateTexture : MonoBehaviour
         sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
         sr.sprite = sprite;
         //making sure the labirynth fits on screen.
-        //if (labirynthHeight > 200)
-        //{
-        //    sr.transform.localScale = new Vector3(0.75f, 0.75f);
-        //}
+        if (makeSelection > 200)
+        {
+            sr.transform.localScale = new Vector3(0.75f, 0.75f);
+        }
         //center the maze on screen
         sr.transform.position = new Vector3(-sr.bounds.size.x / 2, -sr.bounds.size.y / 2, -0.5f);
         

@@ -34,6 +34,7 @@ public class UIhandler : MonoBehaviour
         secondScreen.SetActive(false);
         thirdScreen.SetActive(false);
         mazeCanvas.SetActive(false);
+        signature.SetActive(true);
     }
     public void activateButtonAgain()
     {
@@ -55,6 +56,7 @@ public class UIhandler : MonoBehaviour
         MazeGenerator mg = mazeCanvas.GetComponent<MazeGenerator>();
         mg.generateMaze(choice, width, height);
         thirdScreen.SetActive(true);
+        signature.SetActive(false);
     }
     public void clickedRecursive()
     {
