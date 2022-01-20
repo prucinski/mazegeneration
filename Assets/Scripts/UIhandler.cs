@@ -18,6 +18,7 @@ public class UIhandler : MonoBehaviour
     public Slider heightSlider;
     public Text widthText;
     public Text heightText;
+    public GameObject savedTo;
     private int choice = 1;
     private int width = 10;
     private int height = 10;
@@ -37,6 +38,7 @@ public class UIhandler : MonoBehaviour
     public void activateButtonAgain()
     {
         thirdScreen.SetActive(true);
+        savedTo.SetActive(false);
     }
 
     public void clickedContinue()
@@ -61,6 +63,12 @@ public class UIhandler : MonoBehaviour
     public void clickedIterative()
     {
         choice = 2;
+    }
+    public void clickedSaveToDisc()
+    {
+        mazeCanvas.GetComponent<CreateTexture>().saveImage();
+        savedTo.SetActive(true);
+
     }
     public void slidWidth()
     {

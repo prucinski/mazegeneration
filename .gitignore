@@ -62,7 +62,7 @@ sysinfo.txt
 *.app
 
 #Generated mazes
-/Assets/SavedMazes/
+/Assets/SavedMazes*
 
 # Crashlytics generated file
 crashlytics-build.properties

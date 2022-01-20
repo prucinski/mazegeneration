@@ -47,7 +47,7 @@ public class CreateTexture : MonoBehaviour
         int meshWidth = multiplier * labirynthWidth * 5;
 
         //textures are confusing when it comes to indexing. Or perhaps it's my system that's confusing?
-        texture = new Texture2D(meshWidth, meshHeight, TextureFormat.RGB24, true);
+        texture = new Texture2D(meshWidth, meshHeight, TextureFormat.RGB24, false);
         texture.filterMode = FilterMode.Point;
         //fill with white
         for (int i = 0; i < meshHeight; i++)
@@ -97,12 +97,12 @@ public class CreateTexture : MonoBehaviour
         sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector3(0, 0));
         sr.sprite = sprite;
         //making sure the labirynth fits on screen.
-        if (labirynthHeight > 200)
-        {
-            sr.transform.localScale = new Vector3(0.75f, 0.75f);
-        }
+        //if (labirynthHeight > 200)
+        //{
+        //    sr.transform.localScale = new Vector3(0.75f, 0.75f);
+        //}
         //center the maze on screen
-        sr.transform.position = new Vector3(-sr.bounds.size.x / 2, -sr.bounds.size.y / 2);
+        sr.transform.position = new Vector3(-sr.bounds.size.x / 2, -sr.bounds.size.y / 2, -0.5f);
         
     }
  
@@ -205,6 +205,19 @@ public class CreateTexture : MonoBehaviour
         }
         texture.Apply(false);
 
+    }
+    //BONUS function - save a maze as a PNG so that you can print it later!
+    //via https://answers.unity.com/questions/1331297/how-to-save-a-texture2d-into-a-png.html
+    public void saveImage()
+    {
+        byte[] bytes = texture.EncodeToPNG();
+        var directoryPath = Application.dataPath + "/SavedMazes/";
+        if (!System.IO.Directory.Exists(directoryPath))
+        {
+            System.IO.Directory.CreateDirectory(directoryPath);
+        }
+        System.IO.File.WriteAllBytes(directoryPath + "Maze" + System.DateTimeOffset.Now.ToUnixTimeSeconds() + ".png", bytes);
+        Debug.Log("Created picture at " + directoryPath + ". ");
     }
 
     public int geMultiplier()
