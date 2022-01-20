@@ -61,6 +61,9 @@ sysinfo.txt
 *.unitypackage
 *.app
 
+#Generated mazes
+/Assets/SavedMazes/
+
 # Crashlytics generated file
 crashlytics-build.properties
 
