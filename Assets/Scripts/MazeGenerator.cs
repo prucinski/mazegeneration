@@ -170,6 +170,7 @@ public class MazeGenerator : MonoBehaviour
         Stack<Cell> cellsToExpand = new Stack<Cell>();
         Stack<int> heights = new Stack<int>();
         Stack<int> widths = new Stack<int>();
+        //cellsToExpand.EnsureCapacity(32);
         currentCell.markAsVisited();
         cellsToExpand.Push(currentCell);
         heights.Push(currentHeight);
