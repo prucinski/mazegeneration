@@ -890,7 +890,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Horizontal Bias Off
+  m_Text: Vertical Bias Off
 --- !u!222 &393305072
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1270,7 +1270,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1080
+          m_IntArgument: 1920
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1282,7 +1282,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1920
+          m_IntArgument: 1080
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0

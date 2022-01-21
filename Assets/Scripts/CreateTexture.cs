@@ -39,6 +39,8 @@ public class CreateTexture : MonoBehaviour
     //texture to create the initial laborithm initialization
     public void createMesh(int labirynthHeight, int labirynthWidth)
     {
+        //resetting local scale
+        sr.transform.localScale = new Vector3(1f, 1f);
         int makeSelection = Mathf.Max(labirynthHeight, labirynthWidth);
         //rules described at the start of this piece of the file. For now no other pattern
         multiplier = makeSelection <= 20 ? 10 : (makeSelection <= 40 ? 5 : (makeSelection <= 50 ? 4 : (makeSelection <= 66 ? 3 :(makeSelection<= 100 ? 2: 1))));

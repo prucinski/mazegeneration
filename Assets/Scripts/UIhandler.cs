@@ -31,6 +31,7 @@ public class UIhandler : MonoBehaviour
     private int resHeight = 1080;
     public void Start()
     {
+        Screen.SetResolution(resWidth, resHeight, false);
         firstScreen.SetActive(true);
         secondScreen.SetActive(false);
         thirdScreen.SetActive(false);
