@@ -44,7 +44,7 @@ public class CreateTexture : MonoBehaviour
         int makeSelection = Mathf.Max(labirynthHeight, labirynthWidth);
         //rules described at the start of this piece of the file. For now no other pattern
         multiplier = makeSelection <= 20 ? 10 : (makeSelection <= 40 ? 5 : (makeSelection <= 50 ? 4 : (makeSelection <= 66 ? 3 :(makeSelection<= 100 ? 2: 1))));
-        Debug.Log(geMultiplier());
+        Debug.Log(getMultiplier());
         //in pixels
         int meshHeight = multiplier * labirynthHeight * 5;
         int meshWidth = multiplier * labirynthWidth * 5;
@@ -223,7 +223,7 @@ public class CreateTexture : MonoBehaviour
         Debug.Log("Created picture at " + directoryPath + ". ");
     }
 
-    public int geMultiplier()
+    public int getMultiplier()
     {
         return multiplier;
     }

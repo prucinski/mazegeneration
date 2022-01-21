@@ -56,7 +56,7 @@ public class MazeGenerator : MonoBehaviour
     {
         currentCell.markAsVisited();
         //bad practice (increases coupling) below, but the easiest implementation.
-        int m = textureCreator.geMultiplier();
+        int m = textureCreator.getMultiplier();
         while (currentCell.hasUnvisitedNeighbours())
         {
             int neighbourIndex;
@@ -194,7 +194,7 @@ public class MazeGenerator : MonoBehaviour
         cellsToExpand.Push(currentCell);
         heights.Push(currentHeight);
         widths.Push(currentWidth);
-        int m = textureCreator.geMultiplier();
+        int m = textureCreator.getMultiplier();
         while (cellsToExpand.Count != 0)
         {
             //now, pop the cell from the stack and do operations on it.
